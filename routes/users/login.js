@@ -136,7 +136,7 @@ router.post('/', (req, res) => {
 								userInfo:pack
 		     });
 				 connection.release();
-					 callback(null,"bestList success");
+					 callback(null,"login success");
 		    }
 		  });
 		}
