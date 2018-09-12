@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="5dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activity.CaillContentActivity"
+    tools:showIn="@layout/activity_caill_content">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="4dp"
+                    android:showDividers="beginning|middle|end">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:showDividers="end">
+
+                        <ImageView
+                            android:id="@+id/image_content_user_img"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="0"
+                            android:background="@drawable/circle"
+                            android:padding="0.5dp"
+                            android:scaleType="centerCrop"
+                            card_view:srcCompat="@drawable/drawing_button_bg_circle_selected" />
+
+                        <TextView
+                            android:id="@+id/textView_content_nickname"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="6"
+                            android:gravity="left|center_horizontal|center"
+                            android:text="닉네임" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_weight="0"
+                        android:background="@color/line"
+                        android:orientation="horizontal"
+                        card_view:layout_constraintEnd_toEndOf="@+id/tv_learncontent_title"
+                        card_view:layout_constraintHorizontal_bias="0.0"
+                        card_view:layout_constraintStart_toStartOf="@+id/tv_learncontent_title"
+                        card_view:layout_constraintTop_toBottomOf="@+id/tv_learncontent_title"></LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageview_content_calli"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:background="#f2f2f2"
+                        card_view:srcCompat="@drawable/imagebg" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_weight="0"
+                        android:background="@color/line"
+                        android:orientation="horizontal"
+                        card_view:layout_constraintEnd_toEndOf="@+id/tv_learncontent_title"
+                        card_view:layout_constraintHorizontal_bias="0.0"
+                        card_view:layout_constraintStart_toStartOf="@+id/tv_learncontent_title"
+                        card_view:layout_constraintTop_toBottomOf="@+id/tv_learncontent_title"></LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp">
+
+                        <Button
+                            android:id="@+id/bt_like"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="0"
+                            android:background="@drawable/outline_favorite_border_black_48"
+                            android:padding="8dp" />
+
+                        <Button
+                            android:id="@+id/bt_opt"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/baseline_chevron_right_black_48"
+                            android:padding="8dp"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/textView_content_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="1"
+                            android:gravity="right|center_vertical"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:text="8월 15일" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_weight="0"
+                        android:background="@color/line"
+                        android:orientation="horizontal"
+                        card_view:layout_constraintEnd_toEndOf="@+id/tv_learncontent_title"
+                        card_view:layout_constraintHorizontal_bias="0.0"
+                        card_view:layout_constraintStart_toStartOf="@+id/tv_learncontent_title"
+                        card_view:layout_constraintTop_toBottomOf="@+id/tv_learncontent_title"></LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginLeft="5dp"
+                        android:orientation="vertical"
+                        android:showDividers="beginning">
+
+                        <TextView
+                            android:id="@+id/textview_carditem_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingBottom="15dp"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="20dp"
+                            android:text="내용"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textview_carditem_tag"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="5dp"
+                            android:text="내용" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="0.5dp">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclercomment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:scrollbars="none"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardview">
+
+                </android.support.v7.widget.RecyclerView>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="0.5dp">
+
+                <LinearLayout
+                    android:id="@+id/liner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/cardview_light_background"
+                    android:gravity="center_vertical|center"
+                    android:orientation="horizontal"
+                    android:visibility="visible"
+                    card_view:layout_anchor="@+id/include2"
+                    card_view:layout_anchorGravity="bottom|center">
+
+                    <EditText
+                        android:id="@+id/edit_comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/cardview_light_background"
+                        android:cursorVisible="true"
+                        android:ems="10"
+                        android:hint=" 댓글 달기..."
+                        android:inputType="textPersonName"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:visibility="visible"
+
+                        card_view:layout_anchor="@+id/include2"
+                        card_view:layout_anchorGravity="bottom|center"/>
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="4dp"
+                        android:layout_weight="0"
+                        app:cardBackgroundColor="@color/primaryTextHintColor"
+                        app:cardCornerRadius="4dp"
+                        app:cardElevation="0dp">
+
+                        <TextView
+                            android:id="@+id/bt_comment"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0"
+                            android:gravity="center_vertical|center_horizontal|center"
+                            android:text="입력"
+                            android:textColor="@color/cardview_light_background" />
+                    </android.support.v7.widget.CardView>
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

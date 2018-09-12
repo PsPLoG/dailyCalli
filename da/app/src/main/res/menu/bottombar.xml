@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_one"
+        android:enabled="true"
+        android:icon="@drawable/baseline_home_black_48"
+        android:title="홈"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_two"
+        android:icon="@drawable/baseline_school_black_48"
+        android:title="배우기"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_three"
+        android:enabled="true"
+        android:icon="@drawable/baseline_brush_black_48"
+        android:title="그리기" />
+    <item
+        android:id="@+id/action_four"
+        android:enabled="true"
+        android:icon="@drawable/baseline_color_lens_black_48"
+        android:title="알림" />
+    <item
+        android:id="@+id/action_five"
+        android:enabled="true"
+        android:icon="@drawable/baseline_face_black_48"
+        android:title="마이페이지"
+        app:showAsAction="ifRoom" />
+</menu>

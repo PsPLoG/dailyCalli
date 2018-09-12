@@ -1,0 +1,156 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:contentDescription="@string/cancel"
+    android:orientation="vertical"
+    tools:context=".FreeDrawCalliActivity" >
+
+    <LinearLayout
+        android:id="@+id/tool_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/selectionBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="1dip"
+            android:layout_weight="0"
+            android:background="@drawable/sharp_photo_size_select_small_black_48"
+            android:contentDescription="@string/description"
+            android:padding="4dp" />
+
+        <ImageView
+            android:id="@+id/penBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="1dip"
+            android:layout_weight="0"
+            android:background="@drawable/selector_tool_bg"
+            android:contentDescription="@string/description"
+            android:padding="4dp"
+            android:src="@drawable/baseline_brush_black_48" />
+
+        <ImageView
+            android:id="@+id/imgObjBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="1dip"
+            android:layout_weight="0"
+            android:background="@drawable/selector_tool_bg"
+            android:contentDescription="@string/description"
+            android:padding="4dp"
+            android:src="@drawable/sharp_add_photo_alternate_black_48" />
+
+        <ImageView
+            android:id="@+id/textObjBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="1dip"
+            android:layout_weight="0"
+            android:background="@drawable/selector_tool_bg"
+            android:contentDescription="@string/description"
+            android:padding="4dp"
+            android:src="@drawable/sharp_text_format_black_48" />
+
+        <ImageView
+            android:id="@+id/strokeObjBtn"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dip"
+            android:layout_weight="1"
+            android:background="@drawable/selector_tool_bg"
+            android:contentDescription="@string/description"
+            android:src="@drawable/selector_gesture"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/choiceBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="1dip"
+            android:layout_weight="0"
+            android:background="@drawable/selector_tool_bg"
+            android:contentDescription="@string/description"
+            android:padding="4dp"
+            android:src="@drawable/sharp_local_florist_black_48" />
+
+        <ImageView
+            android:id="@+id/saveFileBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="1dip"
+            android:layout_weight="0"
+            android:background="@drawable/selector_tool_bg"
+            android:contentDescription="@string/description"
+            android:padding="4dp"
+            android:src="@drawable/sharp_save_black_48" />
+
+        <ImageView
+            android:id="@+id/loadFileBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="1dip"
+            android:layout_weight="0"
+            android:background="@drawable/selector_tool_bg"
+            android:contentDescription="@string/description"
+            android:padding="4dp"
+            android:src="@drawable/sharp_folder_black_48" />
+
+        <ImageView
+            android:id="@+id/addPageBtn"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dip"
+            android:layout_weight="1"
+            android:background="@drawable/selector_tool_bg"
+            android:contentDescription="@string/description"
+            android:src="@drawable/selector_page"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <com.samsung.android.sdk.pen.pg.utils.BaseFrameLayout
+        android:id="@+id/spenViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <RelativeLayout
+                android:id="@+id/spenViewLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/settingTextLayout" >
+            </RelativeLayout>
+
+            <com.samsung.android.sdk.pen.settingui.SpenSettingTextLayout
+                android:id="@+id/settingTextLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@android:color/holo_purple"
+                android:orientation="vertical"
+                android:visibility="gone" >
+            </com.samsung.android.sdk.pen.settingui.SpenSettingTextLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/spen_page"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textColor="#FFAAAAAA"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/settingView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </com.samsung.android.sdk.pen.pg.utils.BaseFrameLayout>
+
+</LinearLayout>

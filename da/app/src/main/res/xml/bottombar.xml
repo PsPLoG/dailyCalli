@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <tabs>
+        <tab
+            id="@+id/tab_call_log"
+            title="그리기"
+            icon="@drawable/ic_pen"
+            inActiveColor="@color/primaryTextColor"/>
+        <tab
+            id="@+id/tab_contacts"
+            icon="@drawable/ic_picture"
+            title="내 그림"
+            inActiveColor="@color/primaryTextColor"/>
+        <tab
+            id="@+id/tab_macro_setting"
+            icon="@drawable/ic_setting"
+            title="설정"
+            inActiveColor="@color/primaryTextColor"/>
+    </tabs>
+</PreferenceScreen>

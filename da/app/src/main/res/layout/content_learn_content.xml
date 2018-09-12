@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activity.LearnContentActivity"
+
+    tools:showIn="@layout/activity_learn_content">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="567dp">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="10dp"
+                app:cardElevation="2dp">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="235dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="1"
+                        android:background="@color/line"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_learncontent_title"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="@+id/tv_learncontent_title"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_learncontent_title"></LinearLayout>
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/cardView2"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginStart="22dp"
+                        android:layout_marginTop="20dp"
+                        app:cardCornerRadius="4dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/learn_img"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            card_view:srcCompat="@drawable/logo" />
+                    </android.support.v7.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/tv_learncontent_title"
+                        android:layout_width="235dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="25dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/nav_header_title"
+                        android:textSize="19sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/cardView2"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <Button
+                        android:id="@+id/button2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/button"
+                        android:paddingBottom="5dp"
+                        android:text="배우기"
+                        android:textColor="@color/cardview_light_background"
+                        android:textSize="18dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+
+                    <TextView
+                        android:id="@+id/tv_learn_content_tag"
+                        android:layout_width="235dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="tag"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_learncontent_title"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="@+id/tv_learncontent_title"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_learncontent_title" />
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        app:cardCornerRadius="4dp"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_learn_content_tag"
+                        app:layout_constraintHorizontal_bias="0.483"
+                        app:layout_constraintStart_toStartOf="@+id/tv_learn_content_tag"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_learn_content_tag">
+
+                        <Button
+                            android:id="@+id/bt_preview"
+                            android:layout_width="204dp"
+                            android:layout_height="29dp"
+                            android:background="@color/primaryTextHintColor"
+                            android:text="미리보기"
+                            android:textColor="@color/cardview_light_background"
+
+                            tools:layout_editor_absoluteY="93dp" />
+                    </android.support.v7.widget.CardView>
+
+                </android.support.constraint.ConstraintLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

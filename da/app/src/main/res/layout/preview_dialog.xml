@@ -1,0 +1,98 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
+    android:orientation="vertical"
+    tools:context=".dialog.PreViewDialog">
+
+    <com.samsung.android.sdk.pen.pg.utils.BaseFrameLayout
+        android:id="@+id/spenViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <RelativeLayout
+            android:id="@+id/spenViewLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></RelativeLayout>
+    </com.samsung.android.sdk.pen.pg.utils.BaseFrameLayout>
+
+    <LinearLayout
+        android:id="@+id/tool_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/penBtn"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dip"
+            android:layout_weight="1"
+            android:background="@drawable/selector_tool_bg"
+            android:contentDescription="@string/description"
+            android:src="@drawable/selector_pen"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/eraserBtn"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dip"
+            android:layout_weight="1"
+            android:background="@drawable/selector_tool_bg"
+            android:contentDescription="@string/description"
+            android:src="@drawable/selector_eraser"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/undoBtn"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dip"
+            android:layout_weight="1"
+            android:background="@drawable/selector_tool_bg"
+            android:contentDescription="@string/description"
+            android:src="@drawable/selector_undo"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/redoBtn"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dip"
+            android:layout_weight="1"
+            android:background="@drawable/selector_tool_bg"
+            android:contentDescription="@string/description"
+            android:src="@drawable/selector_redo"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/bgImgBtn"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dip"
+            android:layout_weight="1"
+            android:background="@drawable/selector_tool_bg"
+            android:contentDescription="@string/description"
+            android:src="@drawable/selector_image"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/playBtn"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dip"
+            android:layout_weight="1"
+            android:background="@drawable/selector_tool_bg"
+            android:contentDescription="@string/description"
+            android:src="@drawable/selector_play" />
+
+        <Button
+            android:id="@+id/bt_preview_exit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="종료" />
+    </LinearLayout>
+
+</LinearLayout>
