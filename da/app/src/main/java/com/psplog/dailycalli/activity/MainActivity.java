@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.psplog.dailycalli.http.FileManagement;
@@ -39,6 +40,8 @@ import com.psplog.dailycalli.adapter.RecyclerLearnAdapter;
 import com.psplog.dailycalli.item.Cali_Item;
 import com.psplog.dailycalli.item.CalliLearn_Item;
 import com.psplog.dailycalli.item.ProfileItem;
+import com.smarteist.autoimageslider.SliderLayout;
+import com.smarteist.autoimageslider.SliderView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -51,16 +54,17 @@ import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 public class MainActivity extends AppCompatActivity {
     private MainActivity.SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar!= null){
+        if (toolbar != null) {
             toolbar.setTitleTextColor(getResources().getColor(R.color.primaryTextColor));
             toolbar.setTitle("");
         }
-        final Drawable upArrow =  toolbar.getOverflowIcon();
+        final Drawable upArrow = toolbar.getOverflowIcon();
         upArrow.setColorFilter(Color.parseColor("#1a237e"), PorterDuff.Mode.SRC_ATOP);
         toolbar.setOverflowIcon(upArrow);
         setSupportActionBar(toolbar);
@@ -75,18 +79,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 Drawable upArrow;
-                int p=0;
-                for(int i=0;i<bottomView.getMenu().size();i++)
-                {
+                int p = 0;
+                for (int i = 0; i < bottomView.getMenu().size(); i++) {
                     upArrow = bottomView.getMenu().getItem(i).getIcon();
                     upArrow.setColorFilter(Color.parseColor("#acb8dc"), PorterDuff.Mode.SRC_ATOP);
                     getSupportActionBar().setHomeAsUpIndicator(upArrow);
                     bottomView.getMenu().getItem(i).setIcon(upArrow);
                 }
-                if(position>1)
-                    p=position+1;
+                if (position > 1)
+                    p = position + 1;
                 else
-                    p=position;
+                    p = position;
                 upArrow = bottomView.getMenu().getItem(p).getIcon();
                 upArrow.setColorFilter(Color.parseColor("#1a237e"), PorterDuff.Mode.SRC_ATOP);
                 getSupportActionBar().setHomeAsUpIndicator(upArrow);
@@ -109,8 +112,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Drawable upArrow;
-                for(int i=0;i<bottomView.getMenu().size();i++)
-                {
+                for (int i = 0; i < bottomView.getMenu().size(); i++) {
                     upArrow = bottomView.getMenu().getItem(i).getIcon();
                     upArrow.setColorFilter(Color.parseColor("#acb8dc"), PorterDuff.Mode.SRC_ATOP);
                     getSupportActionBar().setHomeAsUpIndicator(upArrow);
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                         mViewPager.setCurrentItem(1);
                         return true;
                     case R.id.action_three:
-                        Intent intent = new Intent(MainActivity.this,FreeDrawCalliActivity.class);
+                        Intent intent = new Intent(MainActivity.this, FreeDrawCalliActivity.class);
                         startActivity(intent);
                         return true;
                     case R.id.action_four:
@@ -149,8 +151,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        for(int i=0;i<menu.size();i++) {
-            final Drawable upArrow =  menu.getItem(i).getIcon();
+        for (int i = 0; i < menu.size(); i++) {
+            final Drawable upArrow = menu.getItem(i).getIcon();
             upArrow.setColorFilter(Color.parseColor("#1a237e"), PorterDuff.Mode.SRC_ATOP);
             menu.getItem(i).setIcon(upArrow);
         }
@@ -170,14 +172,13 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
             return true;
-        }else if(id == R.id.action_search)
-        {
+        } else if (id == R.id.action_search) {
             Intent intent = new Intent(MainActivity.this, SearchActivity.class);
             startActivity(intent);
             return true;
         }
 
-            return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -192,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
 
         public PlaceholderFragment() {
         }
+
         public static MainActivity.PlaceholderFragment newInstance(int sectionNumber) {
             MainActivity.PlaceholderFragment fragment = new MainActivity.PlaceholderFragment();
             Bundle args = new Bundle();
@@ -199,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
             fragment.setArguments(args);
             return fragment;
         }
+
         public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 
             private int halfSpace;
@@ -215,27 +218,57 @@ public class MainActivity extends AppCompatActivity {
                 outRect.right = halfSpace;
             }
         }
+
         //------------------------------------------------------------------------------------------
         // ViewPager Adaper
         //------------------------------------------------------------------------------------------
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            int sectionNumber= getArguments().getInt(ARG_SECTION_NUMBER);
-            View rootView=null;
-            if(sectionNumber == MAIN_CAILLI_LIST)
-            {
+            int sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
+            View rootView = null;
+            if (sectionNumber == MAIN_CAILLI_LIST) {
                 rootView = inflater.inflate(R.layout.fragment_mainpage, container, false);
                 final Context context = rootView.getContext();
                 final RecyclerView recyclerView = rootView.findViewById(R.id.mrecycle_view);
                 recyclerView.setHasFixedSize(true);
 
-                final int colcount =4;
+                // 메인 배너 슬라이드
+                SliderLayout sliderLayout = rootView.findViewById(R.id.imageSlider);
+                sliderLayout.setIndicatorAnimation(SliderLayout.Animations.FILL);
+                sliderLayout.setScrollTimeInSec(3);
+
+                for (int i = 0; i < 3; i++) {
+                    SliderView sliderView = new SliderView(getContext());
+
+                    switch (i) {
+                        case 0:
+                            sliderView.setImageDrawable(R.drawable.banner2);
+                            break;
+                        case 1:
+                            sliderView.setImageDrawable(R.drawable.images);
+                            break;
+                        case 2:
+                            sliderView.setImageDrawable(R.drawable.banner3);
+                            break;
+                    }
+
+                    sliderView.setImageScaleType(ImageView.ScaleType.CENTER_CROP);
+                    sliderView.setOnSliderClickListener(new SliderView.OnSliderClickListener() {
+                        @Override
+                        public void onSliderClick(SliderView sliderView) {
+//                            Toast.makeText(MainActivity.this, "This is slider " + (finalI + 1), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    sliderLayout.addSliderView(sliderView);
+                }
+
+                final int colcount = 4;
                 GridLayoutManager mLayoutManager = new GridLayoutManager(context, colcount);
                 mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                     @Override
                     public int getSpanSize(int position) {
-                        if(position%(colcount+1)==0)
+                        if (position % (colcount + 1) == 0)
                             return colcount;
                         else return 1;
                     }
@@ -243,32 +276,29 @@ public class MainActivity extends AppCompatActivity {
                 recyclerView.setLayoutManager(mLayoutManager);
                 recyclerView.addItemDecoration(new SpacesItemDecoration(0));
 
-                final List<Cali_Item> items=new ArrayList<Cali_Item>();
-                class LoadCalliList extends AsyncTask<String,String,Integer>
-                {
+                final List<Cali_Item> items = new ArrayList<Cali_Item>();
+                class LoadCalliList extends AsyncTask<String, String, Integer> {
                     List<Cali_Item> tmp;
+
                     @Override
                     protected void onPostExecute(Integer integer) {
                         super.onPostExecute(integer);
-                        for(int i=0;i<tmp.size();i++)
-                        {
-                            Log.d("asd","2caid"+tmp.get(i).getCalli_id());
+                        for (int i = 0; i < tmp.size(); i++) {
+                            Log.d("asd", "2caid" + tmp.get(i).getCalli_id());
                             items.add(tmp.get(i));
                         }
-                        recyclerView.setAdapter(new RecyclerCalliAdapter(context, items, R.layout.activity_main,colcount));
+                        recyclerView.setAdapter(new RecyclerCalliAdapter(context, items, R.layout.activity_main, colcount));
                     }
 
                     @Override
                     protected Integer doInBackground(String... strings) {
-                        tmp= HttpClient.getCalliList();
+                        tmp = HttpClient.getCalliList();
                         return null;
                     }
                 }
                 new LoadCalliList().execute();
 
-            }
-            else if(sectionNumber ==  MAIN_CAILLI_LEARN)
-            {
+            } else if (sectionNumber == MAIN_CAILLI_LEARN) {
                 rootView = inflater.inflate(R.layout.fragment_learn, container, false);
                 final Context context = rootView.getContext();
                 final RecyclerView recyclerView = rootView.findViewById(R.id.mrecycle_view1);
@@ -276,15 +306,14 @@ public class MainActivity extends AppCompatActivity {
                 GridLayoutManager mLayoutManager = new GridLayoutManager(context, 1);
 
                 recyclerView.setLayoutManager(mLayoutManager);
-                final List<CalliLearn_Item> items=new ArrayList<CalliLearn_Item>();
-                class LoadLearnList extends AsyncTask<String,String,Integer>
-                {
+                final List<CalliLearn_Item> items = new ArrayList<CalliLearn_Item>();
+                class LoadLearnList extends AsyncTask<String, String, Integer> {
                     List<CalliLearn_Item> tmp;
+
                     @Override
                     protected void onPostExecute(Integer integer) {
                         super.onPostExecute(integer);
-                        for(int i=0;i<tmp.size();i++)
-                        {
+                        for (int i = 0; i < tmp.size(); i++) {
                             items.add(tmp.get(i));
                         }
                         recyclerView.setAdapter(new RecyclerLearnAdapter(context, items, R.layout.activity_main));
@@ -292,19 +321,14 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     protected Integer doInBackground(String... strings) {
-                        tmp= HttpClient.getLearnList();
+                        tmp = HttpClient.getLearnList();
                         return null;
                     }
                 }
                 new LoadLearnList().execute();
-            }
-
-            else if(sectionNumber ==  MAIN_CAILLI_ALERT)
-            {
+            } else if (sectionNumber == MAIN_CAILLI_ALERT) {
                 rootView = inflater.inflate(R.layout.fragment_search, container, false);
-            }
-            else if(sectionNumber ==  MAIN_CAILLI_MY)
-            {
+            } else if (sectionNumber == MAIN_CAILLI_MY) {
                 rootView = inflater.inflate(R.layout.fragment_mypage, container, false);
                 final ImageView profile_img = rootView.findViewById(R.id.profile_img);
                 final TextView follower = rootView.findViewById(R.id.tv_mypage_count);
@@ -319,31 +343,31 @@ public class MainActivity extends AppCompatActivity {
                 GridLayoutManager mLayoutManager = new GridLayoutManager(context, 3);
                 recyclerView.setLayoutManager(mLayoutManager);
 
-                class LoadProfile extends AsyncTask<String,String,Integer>
-                {
+                class LoadProfile extends AsyncTask<String, String, Integer> {
                     ProfileItem tmp;
                     List<Cali_Item> tmp1;
+
                     @Override
                     protected void onPostExecute(Integer integer) {
                         super.onPostExecute(integer);
                         Glide.with(getContext()).load(tmp.getUser_img()).apply(bitmapTransform(new CropCircleTransformation())).into(profile_img);
-                        post.setText(tmp.getPostCount()+"");
-                        follower.setText(tmp.getFollower()+"");
-                        following.setText(tmp.getFollowing()+"");
+                        post.setText(tmp.getPostCount() + "");
+                        follower.setText(tmp.getFollower() + "");
+                        following.setText(tmp.getFollowing() + "");
 
                         nickname.setText(tmp.getUser_nickname());
-                        if (tmp.getUser_intro().equals("null") || tmp.getUser_intro()==null )
+                        if (tmp.getUser_intro().equals("null") || tmp.getUser_intro() == null)
                             content.setText("소개글이 없습니다.");
                         else
                             content.setText(tmp.getUser_intro());
 
-                        recyclerView.setAdapter(new RecyclerCalliAdapter(context, tmp1, R.layout.activity_main,3));
+                        recyclerView.setAdapter(new RecyclerCalliAdapter(context, tmp1, R.layout.activity_main, 3));
                     }
 
                     @Override
                     protected Integer doInBackground(String... strings) {
-                        tmp= HttpClient.getProfile();
-                        tmp1=HttpClient.getMyCallijList();
+                        tmp = HttpClient.getProfile();
+                        tmp1 = HttpClient.getMyCallijList();
                         return null;
                     }
                 }
@@ -351,6 +375,10 @@ public class MainActivity extends AppCompatActivity {
             }
             return rootView;
         }
+    }
+
+    private  void setSliderViews(SliderLayout sliderLayout) {
+
     }
 
     /**
