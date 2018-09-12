@@ -4,25 +4,27 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="5dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="3dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activity.CaillContentActivity"
     tools:showIn="@layout/activity_caill_content">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="5dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="3dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
@@ -76,7 +78,7 @@
                         card_view:layout_constraintEnd_toEndOf="@+id/tv_learncontent_title"
                         card_view:layout_constraintHorizontal_bias="0.0"
                         card_view:layout_constraintStart_toStartOf="@+id/tv_learncontent_title"
-                        card_view:layout_constraintTop_toBottomOf="@+id/tv_learncontent_title"></LinearLayout>
+                        card_view:layout_constraintTop_toBottomOf="@+id/tv_learncontent_title" />
 
                     <ImageView
                         android:id="@+id/imageview_content_calli"
@@ -94,7 +96,7 @@
                         card_view:layout_constraintEnd_toEndOf="@+id/tv_learncontent_title"
                         card_view:layout_constraintHorizontal_bias="0.0"
                         card_view:layout_constraintStart_toStartOf="@+id/tv_learncontent_title"
-                        card_view:layout_constraintTop_toBottomOf="@+id/tv_learncontent_title"></LinearLayout>
+                        card_view:layout_constraintTop_toBottomOf="@+id/tv_learncontent_title" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -145,7 +147,7 @@
                         card_view:layout_constraintEnd_toEndOf="@+id/tv_learncontent_title"
                         card_view:layout_constraintHorizontal_bias="0.0"
                         card_view:layout_constraintStart_toStartOf="@+id/tv_learncontent_title"
-                        card_view:layout_constraintTop_toBottomOf="@+id/tv_learncontent_title"></LinearLayout>
+                        card_view:layout_constraintTop_toBottomOf="@+id/tv_learncontent_title" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -176,24 +178,21 @@
                             android:text="내용" />
 
                     </LinearLayout>
-
-
                 </LinearLayout>
-
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 app:cardCornerRadius="4dp"
-                app:cardElevation="0.5dp">
+                android:paddingBottom="2dp">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclercomment"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:scrollbars="none"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -203,69 +202,67 @@
 
                 </android.support.v7.widget.RecyclerView>
             </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                app:cardCornerRadius="4dp"
-                app:cardElevation="0.5dp">
-
-                <LinearLayout
-                    android:id="@+id/liner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/cardview_light_background"
-                    android:gravity="center_vertical|center"
-                    android:orientation="horizontal"
-                    android:visibility="visible"
-                    card_view:layout_anchor="@+id/include2"
-                    card_view:layout_anchorGravity="bottom|center">
-
-                    <EditText
-                        android:id="@+id/edit_comment"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="1"
-                        android:background="@color/cardview_light_background"
-                        android:cursorVisible="true"
-                        android:ems="10"
-                        android:hint=" 댓글 달기..."
-                        android:inputType="textPersonName"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:visibility="visible"
-
-                        card_view:layout_anchor="@+id/include2"
-                        card_view:layout_anchorGravity="bottom|center"/>
-
-                    <android.support.v7.widget.CardView
-                        android:layout_width="60dp"
-                        android:layout_height="match_parent"
-                        android:layout_margin="4dp"
-                        android:layout_weight="0"
-                        app:cardBackgroundColor="@color/primaryTextHintColor"
-                        app:cardCornerRadius="4dp"
-                        app:cardElevation="0dp">
-
-                        <TextView
-                            android:id="@+id/bt_comment"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0"
-                            android:gravity="center_vertical|center_horizontal|center"
-                            android:text="입력"
-                            android:textColor="@color/cardview_light_background" />
-                    </android.support.v7.widget.CardView>
-
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
         </LinearLayout>
     </ScrollView>
 
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="0.5dp">
+
+        <LinearLayout
+            android:id="@+id/liner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/cardview_light_background"
+            android:gravity="center_vertical|center"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            card_view:layout_anchor="@+id/include2"
+            card_view:layout_anchorGravity="bottom|center">
+
+            <EditText
+                android:id="@+id/edit_comment"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@color/cardview_light_background"
+                android:cursorVisible="true"
+                android:ems="10"
+                android:hint=" 댓글 달기..."
+                android:inputType="textPersonName"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:visibility="visible"
+
+                card_view:layout_anchor="@+id/include2"
+                card_view:layout_anchorGravity="bottom|center" />
+
+            <android.support.v7.widget.CardView
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_margin="4dp"
+                android:layout_weight="0"
+                app:cardBackgroundColor="@color/primaryTextHintColor"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="0dp">
+
+                <TextView
+                    android:id="@+id/bt_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:gravity="center_vertical|center_horizontal|center"
+                    android:text="입력"
+                    android:textColor="@color/cardview_light_background" />
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 </LinearLayout>
