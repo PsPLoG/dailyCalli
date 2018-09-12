@@ -137,8 +137,9 @@ public class FreeDrawCalliActivity extends Activity {
     private ImageView mTextObjBtn;
     private ImageView mStrokeObjBtn;
     private ImageView mShapeLineObjBtn;
-    private ImageView mSaveFileBtn;
+    private TextView mSaveFileBtn;
     private ImageView mLoadFileBtn;
+    private ImageView mLoadFileBtn2;
     private ImageView mAddPageBtn;
     private TextView mTxtView;
 
@@ -266,11 +267,13 @@ public class FreeDrawCalliActivity extends Activity {
         mShapeLineObjBtn = (ImageView) findViewById(R.id.choiceBtn);
         mShapeLineObjBtn.setOnClickListener(mShapeLineObjBtnClickListener);
 
-        mSaveFileBtn = (ImageView) findViewById(R.id.saveFileBtn);
+        mSaveFileBtn = (TextView) findViewById(R.id.saveFileBtn);
         mSaveFileBtn.setOnClickListener(mSaveFileBtnClickListener);
 
-        mLoadFileBtn = (ImageView) findViewById(R.id.loadFileBtn);
-        mLoadFileBtn.setOnClickListener(mLoadFileBtnClickListener);
+        mLoadFileBtn = (ImageView) findViewById(R.id.undo);
+        mLoadFileBtn.setOnClickListener(mREDOBtnClickListener);
+        mLoadFileBtn2 = (ImageView) findViewById(R.id.redo);
+        mLoadFileBtn2.setOnClickListener(mREDOBtnClickListener);
 
         mAddPageBtn = (ImageView) findViewById(R.id.addPageBtn);
         mAddPageBtn.setOnClickListener(mAddPageBtnClickListener);
@@ -534,12 +537,36 @@ public class FreeDrawCalliActivity extends Activity {
             if (checkPermission()) {
                 return;
             }
-            mSpenSurfaceView.closeControl();
-
-            closeSettingView();
-            loadNoteFile();
+            if (mSpenPageDoc.isUndoable()) {
+                SpenPageDoc.HistoryUpdateInfo[] userData = mSpenPageDoc.undo();
+                mSpenSurfaceView.updateUndo(userData);
+            }
         }
     };
+
+
+    private final OnClickListener mREDOBtnClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mSpenPageDoc == null) {
+                return;
+            }
+            // Undo button is clicked.
+            if (v.equals(mLoadFileBtn)) {
+                if (mSpenPageDoc.isUndoable()) {
+                    SpenPageDoc.HistoryUpdateInfo[] userData = mSpenPageDoc.undo();
+                    mSpenSurfaceView.updateUndo(userData);
+                }
+                // Redo button is clicked.
+            } else if (v.equals(mLoadFileBtn2)) {
+                if (mSpenPageDoc.isRedoable()) {
+                    SpenPageDoc.HistoryUpdateInfo[] userData = mSpenPageDoc.redo();
+                    mSpenSurfaceView.updateRedo(userData);
+                }
+            }
+        }
+    };
+
 
     private final OnClickListener mAddPageBtnClickListener = new OnClickListener() {
         @Override
@@ -820,6 +847,11 @@ public class FreeDrawCalliActivity extends Activity {
         if (!fileName.equals("")) {
 
             Intent intent = new Intent(FreeDrawCalliActivity.this, UploadCalliActivity.class);
+            File checkFile = new File(saveFilePath);
+            if (!checkFile.mkdirs()) {
+                Toast.makeText(mContext, "Save Path Creation Error", Toast.LENGTH_SHORT).show();
+            }
+
 
             saveFilePath += HttpClient.user_nickname;
             saveFilePath += ".spd";

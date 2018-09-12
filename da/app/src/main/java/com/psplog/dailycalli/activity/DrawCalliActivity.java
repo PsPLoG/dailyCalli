@@ -901,13 +901,13 @@ public class DrawCalliActivity extends Activity {
                     runOnUiThread(new Runnable() {
                         public void run() {
                             try {
-                                Thread.sleep(2000);
+                                Thread.sleep(1000);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
 
                             for (int i = 0; i < 16; i++) {
-                                mSpenSurfaceView.setZoom(list.get(0).getRect().centerX(),list.get(0).getRect().centerY(),1.0f+(2.5f*(i/16f)));
+                                mSpenSurfaceView.setZoom(list.get(0).getRect().centerX(),list.get(0).getRect().centerY(),1.0f+(2.0f*(i/16f)));
                                 try {
                                     Thread.sleep(20);
                                 } catch (InterruptedException e) {

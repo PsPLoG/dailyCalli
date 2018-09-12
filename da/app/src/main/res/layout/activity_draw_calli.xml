@@ -302,7 +302,7 @@
             android:src="@drawable/add_favorite_pen" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tv_drawcalli_send"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0"
