@@ -40,14 +40,20 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.psplog.dailycalli.R;
+import com.psplog.dailycalli.dialog.LearnResultDialog;
+import com.psplog.dailycalli.dialog.PreViewDialog;
+import com.psplog.dailycalli.http.HttpClient;
 import com.samsung.android.sdk.SsdkUnsupportedException;
 import com.samsung.android.sdk.composer.SpenActionListener;
 import com.samsung.android.sdk.pen.Spen;
@@ -75,6 +81,8 @@ import com.samsung.android.sdk.pen.settingui.SpenSettingEraserLayout;
 import com.samsung.android.sdk.pen.settingui.SpenSettingEraserLayout.EventListener;
 import com.samsung.android.sdk.pen.settingui.SpenSettingPenLayout;
 
+import org.w3c.dom.Text;
+
 public class DrawCalliActivity extends Activity {
     public static final int SDK_VERSION = Build.VERSION.SDK_INT;
     private static final int ADD_BACKGROUND_REQUEST = 1;
@@ -99,15 +107,17 @@ public class DrawCalliActivity extends Activity {
     private float matchRatio;
     private Rect rect;
     private boolean checkEndPen;
-    private boolean startReplay=false;
+    private boolean startReplay = true;
+    private boolean checkEndLearn=false;
     private int mToolType = SpenSurfaceView.TOOL_SPEN;
     private File mFilePath;
     private ImageView mSaveFileBtn;
     private ImageView mLoadFileBtn;
 
-    private int learnProgress=0;
+    private int learnProgress = 0;
     private ArrayList<SpenObjectBase> list = new ArrayList<SpenObjectBase>();
     private ArrayList<SpenObjectBase> userList = new ArrayList<SpenObjectBase>();
+
     @Override
 
 
@@ -153,7 +163,7 @@ public class DrawCalliActivity extends Activity {
 
         // Create SpenSurfaceView
         mSpenSurfaceView = new SpenSurfaceView(mContext);
-        if (mSpenSurfaceView == null ) {
+        if (mSpenSurfaceView == null) {
             Toast.makeText(mContext, "Cannot create new SpenSurfaceView.", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -198,7 +208,17 @@ public class DrawCalliActivity extends Activity {
         mSpenPageDoc.setHistoryListener(mHistoryListener);
         mEraserSettingView.setEraserListener(mEraserListener);
 
+        TextView tv_send = (TextView) findViewById(R.id.tv_drawcalli_send);
+        tv_send.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkEndLearn == true)
+                    learnSaveNoteFile(true);
+            }
+        });
         // Set a button
+
+
         mPenBtn = (ImageView) findViewById(R.id.penBtn);
         mPenBtn.setOnClickListener(mPenBtnClickListener);
 
@@ -254,20 +274,19 @@ public class DrawCalliActivity extends Activity {
 //            }
 //        }).start();
 
-        String filepath= getIntent().getStringExtra("file");
+        String filepath = getIntent().getStringExtra("file");
         startLearn(filepath);
     }
 
-    private void setAniZoom(final float centerX, final float centerY, float ratio)
-    {
-        final float r=ratio-1;
+    private void setAniZoom(final float centerX, final float centerY, float ratio) {
+        final float r = ratio - 1;
         new Thread(new Runnable() {
             @Override
             public void run() {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         for (int i = 0; i < 16; i++) {
-                            mSpenSurfaceView.setZoom(centerX,centerY,1.0f+(r*(i/16f)));
+                            mSpenSurfaceView.setZoom(centerX, centerY, 1.0f + (r * (i / 16f)));
                             try {
                                 Thread.sleep(20);
                             } catch (InterruptedException e) {
@@ -279,36 +298,35 @@ public class DrawCalliActivity extends Activity {
             }
         }).start();
     }
-    public void setPan(float x, float y)
-    {
-        Log.d("asd","x : "+x+" y : "+ y);
-        lastPanX=x;
-        lastPanY=y;
-        mSpenSurfaceView.setPan(new PointF(x,y));
-    }
-    private boolean similarBitmap(SpenObjectBase a,SpenObjectBase b)
-    {
-        PointF A[] = ((SpenObjectStroke)a).getPoints();
-        PointF B[] = ((SpenObjectStroke)b).getPoints();
 
-        Log.d("jaccard"," jaccard : "+jaccardSimilarity(A,B));
-        if(jaccardSimilarity(A,B)>=0.5) {
-            matchRatio+=jaccardSimilarity(A,B);
+    public void setPan(float x, float y) {
+        Log.d("asd", "x : " + x + " y : " + y);
+        lastPanX = x;
+        lastPanY = y;
+        mSpenSurfaceView.setPan(new PointF(x, y));
+    }
+
+    private boolean similarBitmap(SpenObjectBase a, SpenObjectBase b) {
+        PointF A[] = ((SpenObjectStroke) a).getPoints();
+        PointF B[] = ((SpenObjectStroke) b).getPoints();
+
+        Log.d("jaccard", " jaccard : " + jaccardSimilarity(A, B));
+        if (jaccardSimilarity(A, B) >= 0.5) {
+            matchRatio += jaccardSimilarity(A, B);
             return false;
-        }
-        else
+        } else
             return true;
     }
-    static private PointF[] trimFloat(PointF[] a)
-    {
-        int acc=20;
-        for(int i=0;i<a.length;i++)
-        {
-            a[i].x=((int)a[i].x/acc)*acc;
-            a[i].y=((int)a[i].y/acc)*acc;
+
+    static private PointF[] trimFloat(PointF[] a) {
+        int acc = 20;
+        for (int i = 0; i < a.length; i++) {
+            a[i].x = ((int) a[i].x / acc) * acc;
+            a[i].y = ((int) a[i].y / acc) * acc;
         }
         return a;
     }
+
     static private double jaccardSimilarity(PointF[] a, PointF[] b) {
         Set<PointF> s1 = new HashSet<PointF>();
         a = trimFloat(a);
@@ -327,8 +345,8 @@ public class DrawCalliActivity extends Activity {
         final int intersection = s1.size();
         return 1d / (sa + sb - intersection) * intersection;
     }
-    public void startReplayPostion(int positon)
-    {
+
+    public void startReplayPostion(int positon) {
         mSpenSurfaceView.startReplay();
         mSpenSurfaceView.pauseReplay();
         int objectSize = mSpenPageDoc.getObjectList().size();
@@ -336,28 +354,38 @@ public class DrawCalliActivity extends Activity {
             mSpenSurfaceView.setReplayPosition(mSpenPageDoc.getObjectList().size() - 1);
         mSpenSurfaceView.resumeReplay();
     }
-    public void nextReplay(int num)
-    {
+
+    public void nextReplay(int num) {
         // replay가 진행중이면 중지
-        if(mSpenSurfaceView.getReplayState()==SpenSurfaceView.REPLAY_STATE_PLAYING)
+        if (mSpenSurfaceView.getReplayState() == SpenSurfaceView.REPLAY_STATE_PLAYING || checkEndLearn == true)
             return;
 
-        if(num>=list.size()) {
-            String rating="";
-            if(matchRatio/list.size()>=0.6)
-                rating="★★★";
-            else if(matchRatio/list.size()>=0.55)
-                rating="★★";
-            else if(matchRatio/list.size()>=0.5)
-                rating="★";
-            mSpenPageDoc.removeObject(mSpenPageDoc.getObject(mSpenPageDoc.getObjectList().size()-2));
+        if (num >= list.size()) {
+            checkEndLearn=true;
+            String rating = "";
+            if (matchRatio / list.size() >= 0.6)
+                rating = "★★★";
+            else if (matchRatio / list.size() >= 0.55)
+                rating = "★★";
+            else if (matchRatio / list.size() >= 0.5)
+                rating = "★";
+            mSpenPageDoc.removeObject(mSpenPageDoc.getObject(mSpenPageDoc.getObjectList().size() - 2));
             mSpenSurfaceView.update();
-            Toast.makeText(mContext, "완성! 축하드려요. 점수는 "+rating+"입니다~", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "완성! 축하드려요. 점수는 " + rating + "입니다~", Toast.LENGTH_SHORT).show();
+
+            LearnResultDialog d = new LearnResultDialog(DrawCalliActivity.this,DrawCalliActivity.this, rating);
+            WindowManager.LayoutParams params = d.getWindow().getAttributes();
+            params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+            params.height = 200;
+            d.getWindow().setAttributes( params);
+            d.show();
+
+
             Log.d("asd", "배우기 종료");
-            return ;
+            return;
         }
         learnProgress++;
-        if(mSpenPageDoc.getObjectList().size()>1) {
+        if (mSpenPageDoc.getObjectList().size() > 1) {
             // 일치율이 부족할경우 다시 보여줌
             if (similarBitmap(mSpenPageDoc.getObject(mSpenPageDoc.getObjectList().size() - 1), mSpenPageDoc.getObject(mSpenPageDoc.getObjectList().size() - 2))) {
                 Toast.makeText(mContext, "다시 그려주세요.", Toast.LENGTH_SHORT).show();
@@ -365,17 +393,17 @@ public class DrawCalliActivity extends Activity {
                 mSpenSurfaceView.updateUndo(userData);
                 learnProgress--;
                 return;
-            }else
+            } else
                 mSpenPageDoc.removeObject(mSpenPageDoc.getObject(mSpenPageDoc.getObjectList().size() - 2));
         }
         mSpenPageDoc.appendObject(list.get(num));
         mSpenSurfaceView.update();
 
         final int index = num;
-        final float coX=540;
-        final float coY=930;
-        final float getX=mSpenSurfaceView.getPan().x;
-        final float getY=mSpenSurfaceView.getPan().y;
+        final float coX = 540;
+        final float coY = 930;
+        final float getX = mSpenSurfaceView.getPan().x;
+        final float getY = mSpenSurfaceView.getPan().y;
         final float ratio = mSpenSurfaceView.getZoomRatio();
 
         new Thread(new Runnable() {
@@ -383,12 +411,12 @@ public class DrawCalliActivity extends Activity {
             public void run() {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        float targetX=0,targetY=0;
-                        int fps=20;
+                        float targetX = 0, targetY = 0;
+                        int fps = 20;
                         for (int i = 0; i < 16; i++) {
-                            targetX = (list.get(index).getRect().centerX()-getX-(coX/ratio))*(i/16f);
-                            targetY = (list.get(index).getRect().centerY()-getY-(coY/ratio))*(i/16f);
-                            setPan(getX+targetX,getY+targetY);
+                            targetX = (list.get(index).getRect().centerX() - getX - (coX / ratio)) * (i / 16f);
+                            targetY = (list.get(index).getRect().centerY() - getY - (coY / ratio)) * (i / 16f);
+                            setPan(getX + targetX, getY + targetY);
                             //Log.d("asd","w : "+coX+" h : "+coY+"ratio"+mSpenSurfaceView.getZoomRatio());
                             try {
                                 Thread.sleep(20);
@@ -397,7 +425,7 @@ public class DrawCalliActivity extends Activity {
                             }
                         }
                         // setPan(list.get(index).getRect().centerX()-180,list.get(index).getRect().centerY()-310);
-                        startReplayPostion(0);
+                        if(startReplay)startReplayPostion(0);
                     }
                 });
             }
@@ -434,6 +462,7 @@ public class DrawCalliActivity extends Activity {
             }
         }
     }
+
     private void initSettingInfo() {
         // Initialize Pen settings
         SpenSettingPenInfo penInfo = new SpenSettingPenInfo();
@@ -448,6 +477,7 @@ public class DrawCalliActivity extends Activity {
         mSpenSurfaceView.setEraserSettingInfo(eraserInfo);
         mEraserSettingView.setInfo(eraserInfo);
     }
+
     private void setSmartScale(boolean enable) {
 
         // Set the region for Smart Zoom
@@ -483,16 +513,16 @@ public class DrawCalliActivity extends Activity {
                 case MotionEvent.ACTION_DOWN:
                 case MotionEvent.ACTION_POINTER_DOWN:
                     enableButton(false);
-                    checkEndPen=false;
+                    checkEndPen = false;
                     break;
                 case MotionEvent.ACTION_CANCEL:
                 case MotionEvent.ACTION_UP:
                     enableButton(true);
                     // TouchUP 일때
                     // 다음 단계로
-                    checkEndPen=true;
+                    checkEndPen = true;
 
-                    Log.d("asd","touchUp X: "+event.getX()+" Y:"+event.getY()+"current ratio : "+mSpenSurfaceView.getZoomRatio());
+                    Log.d("asd", "touchUp X: " + event.getX() + " Y:" + event.getY() + "current ratio : " + mSpenSurfaceView.getZoomRatio());
 
                     break;
             }
@@ -553,7 +583,7 @@ public class DrawCalliActivity extends Activity {
     private final OnClickListener mBgImgBtnClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(hasReadStorePermission()){
+            if (hasReadStorePermission()) {
                 closeSettingView();
                 mSpenSurfaceView.cancelStroke();
                 callGalleryForInputImage(REQUEST_CODE_SELECT_IMAGE_BACKGROUND);
@@ -588,7 +618,7 @@ public class DrawCalliActivity extends Activity {
             // Undo button is clicked
             if (v.equals(mUndoBtn)) {
                 if (mSpenPageDoc.isUndoable()) {
-                    if(mSpenPageDoc.getObjectList().size()>1){
+                    if (mSpenPageDoc.getObjectList().size() > 1) {
                         HistoryUpdateInfo[] userData = mSpenPageDoc.undo();
                         mSpenSurfaceView.updateUndo(userData);
                         userData = mSpenPageDoc.undo();
@@ -631,11 +661,11 @@ public class DrawCalliActivity extends Activity {
     private final HistoryListener mHistoryListener = new HistoryListener() {
         @Override
         public void onCommit(SpenPageDoc page) {
-            Log.d("asd","onCommit");
-            if(checkEndPen) // TOUCHUP일떄 리플레이를 보여줌
+            Log.d("asd", "onCommit");
+            if (checkEndPen) // TOUCHUP일떄 리플레이를 보여줌
             {
-                checkEndPen=false;
-                nextReplay(learnProgress);
+                checkEndPen = false;
+                if(checkEndPen==false)nextReplay(learnProgress);
             }
         }
 
@@ -655,7 +685,7 @@ public class DrawCalliActivity extends Activity {
     private final SpenLayeredReplayListener mReplayListener = new SpenLayeredReplayListener() {
 
         @Override
-        public void onProgressChanged(int progress,int la, int id) {
+        public void onProgressChanged(int progress, int la, int id) {
         }
 
         @Override
@@ -667,7 +697,7 @@ public class DrawCalliActivity extends Activity {
                     setBtnEnabled(true);
                     mUndoBtn.setEnabled(mSpenPageDoc.isUndoable());
                     mRedoBtn.setEnabled(mSpenPageDoc.isRedoable());
-                    setPan(lastPanX,lastPanY);
+                    setPan(lastPanX, lastPanY);
 
                 }
             });
@@ -713,7 +743,7 @@ public class DrawCalliActivity extends Activity {
     private final OnClickListener mSaveFileBtnClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(checkPermission()){
+            if (checkPermission()) {
                 return;
             }
             mSpenSurfaceView.closeControl();
@@ -726,15 +756,26 @@ public class DrawCalliActivity extends Activity {
     private final OnClickListener mLoadFileBtnClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(checkPermission()){
-                return;
+//            if (checkPermission()) {
+//                return;
+//            }
+//            mSpenSurfaceView.closeControl();
+//
+//            closeSettingView();
+//            loadNoteFile();
+            if(startReplay)
+            {
+                Toast.makeText(getApplication(), "다시보기를 끕니다.",Toast.LENGTH_SHORT).show();
+                startReplay=false;
             }
-            mSpenSurfaceView.closeControl();
-
-            closeSettingView();
-            loadNoteFile();
+            else
+            {
+                Toast.makeText(getApplication(), "다시보기를 켭니다.",Toast.LENGTH_SHORT).show();
+                startReplay=true;
+            }
         }
     };
+
     private void loadNoteFile() {
         // Load the file list.
         final String fileList[] = setFileList();
@@ -748,7 +789,7 @@ public class DrawCalliActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String strFilePath = mFilePath.getPath() + '/' + fileList[which];
-                        Log.d("file ", "getPath :"+mFilePath.getPath()+" file "+fileList[which]);
+                        Log.d("file ", "getPath :" + mFilePath.getPath() + " file " + fileList[which]);
                         try {
                             SpenObjectTextBox.setInitialCursorPos(SpenObjectTextBox.CURSOR_POS_END);
                             // Create NoteDoc with the selected file.
@@ -762,15 +803,14 @@ public class DrawCalliActivity extends Activity {
                                 mSpenPageDoc = mSpenNoteDoc.getPage(mSpenNoteDoc.getLastEditedPageIndex());
                             }
                             list.clear();
-                            for(int i=0;i<mSpenPageDoc.getObjectList().size();i++)
-                            {
+                            for (int i = 0; i < mSpenPageDoc.getObjectList().size(); i++) {
                                 SpenObjectStroke tmp = new SpenObjectStroke();
                                 tmp.copy(mSpenPageDoc.getObjectList().get(i));
                                 tmp.setColor(0xcfcfcf);
                                 list.add(tmp);
                             }
-                            matchRatio=0;
-                            learnProgress=0;
+                            matchRatio = 0;
+                            learnProgress = 0;
                             mSpenPageDoc.setHistoryListener(mHistoryListener);
                             mSpenSurfaceView.setPageDoc(mSpenPageDoc, true);
                             mSpenSurfaceView.setReplaySpeed(2);
@@ -812,21 +852,21 @@ public class DrawCalliActivity extends Activity {
                                             }
 
                                             for (int i = 0; i < 16; i++) {
-                                                mSpenSurfaceView.setZoom(list.get(0).getRect().centerX(),list.get(0).getRect().centerY(),1.0f+(2.5f*(i/16f)));
+                                                mSpenSurfaceView.setZoom(list.get(0).getRect().centerX(), list.get(0).getRect().centerY(), 1.0f + (2.5f * (i / 16f)));
                                                 try {
                                                     Thread.sleep(20);
                                                 } catch (InterruptedException e) {
                                                     e.printStackTrace();
                                                 }
                                             }
-                                            lastPanX=mSpenSurfaceView.getPan().x;
-                                            lastPanX=mSpenSurfaceView.getPan().y;
-                                            learnProgress=0;
+                                            lastPanX = mSpenSurfaceView.getPan().x;
+                                            lastPanX = mSpenSurfaceView.getPan().y;
+                                            learnProgress = 0;
                                             mSpenPageDoc.removeAllObject();
                                             mSpenSurfaceView.cancelStroke();
                                             mSpenSurfaceView.startReplay();
                                             nextReplay(learnProgress);
-                                            startReplay=true;
+                                            startReplay = true;
                                         }
                                     });
                                 }
@@ -850,11 +890,10 @@ public class DrawCalliActivity extends Activity {
                 }).show();
     }
 
-    private void startLearn(String filepath)
-    {
+    private void startLearn(String filepath) {
         try {
-
-            Log.d("file ", "getPath :"+filepath);
+            checkEndLearn =false;
+            Log.d("file ", "getPath :" + filepath);
             SpenObjectTextBox.setInitialCursorPos(SpenObjectTextBox.CURSOR_POS_END);
             // Create NoteDoc with the selected file.
             SpenNoteDoc tmpSpenNoteDoc = new SpenNoteDoc(mContext, filepath, rect.width(),
@@ -867,29 +906,27 @@ public class DrawCalliActivity extends Activity {
                 mSpenPageDoc = mSpenNoteDoc.getPage(mSpenNoteDoc.getLastEditedPageIndex());
             }
             list.clear();
-            for(int i=0;i<mSpenPageDoc.getObjectList().size();i++)
-            {
+            for (int i = 0; i < mSpenPageDoc.getObjectList().size(); i++) {
                 SpenObjectStroke tmp = new SpenObjectStroke();
                 tmp.copy(mSpenPageDoc.getObjectList().get(i));
                 tmp.setColor(0xcfcfcf);
 
-                if(i==0)
-                {
-                    mSpenSurfaceView.getPenSettingInfo().advancedSetting=tmp.getAdvancedPenSetting();
-                    mSpenSurfaceView.getPenSettingInfo().color=tmp.getColor();
-                    mSpenSurfaceView.getPenSettingInfo().size=tmp.getPenSize();
+                if (i == 0) {
+                    mSpenSurfaceView.getPenSettingInfo().advancedSetting = tmp.getAdvancedPenSetting();
+                    mSpenSurfaceView.getPenSettingInfo().color = tmp.getColor();
+                    mSpenSurfaceView.getPenSettingInfo().size = tmp.getPenSize();
 
-                    mPenSettingView.getInfo().advancedSetting=tmp.getAdvancedPenSetting();
-                    mPenSettingView.getInfo().color=tmp.getColor();
-                    mPenSettingView.getInfo().size=tmp.getPenSize();
+                    mPenSettingView.getInfo().advancedSetting = tmp.getAdvancedPenSetting();
+                    mPenSettingView.getInfo().color = tmp.getColor();
+                    mPenSettingView.getInfo().size = tmp.getPenSize();
 
                 }
                 //Log.d("peninfo",tmp.getAdvancedPenSetting());
                 list.add(tmp);
 
             }
-            matchRatio=0;
-            learnProgress=0;
+            matchRatio = 0;
+            learnProgress = 0;
             mSpenPageDoc.setHistoryListener(mHistoryListener);
             mSpenSurfaceView.setPageDoc(mSpenPageDoc, true);
             mSpenSurfaceView.setReplaySpeed(2);
@@ -907,21 +944,21 @@ public class DrawCalliActivity extends Activity {
                             }
 
                             for (int i = 0; i < 16; i++) {
-                                mSpenSurfaceView.setZoom(list.get(0).getRect().centerX(),list.get(0).getRect().centerY(),1.0f+(2.0f*(i/16f)));
+                                mSpenSurfaceView.setZoom(list.get(0).getRect().centerX(), list.get(0).getRect().centerY(), 1.0f + (2.0f * (i / 16f)));
                                 try {
                                     Thread.sleep(20);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
                             }
-                            lastPanX=mSpenSurfaceView.getPan().x;
-                            lastPanX=mSpenSurfaceView.getPan().y;
-                            learnProgress=0;
+                            lastPanX = mSpenSurfaceView.getPan().x;
+                            lastPanX = mSpenSurfaceView.getPan().y;
+                            learnProgress = 0;
                             mSpenPageDoc.removeAllObject();
                             mSpenSurfaceView.cancelStroke();
                             mSpenSurfaceView.startReplay();
                             nextReplay(learnProgress);
-                            startReplay=true;
+                            startReplay = true;
                         }
                     });
                 }
@@ -942,6 +979,7 @@ public class DrawCalliActivity extends Activity {
             Toast.makeText(mContext, "Failed to load noteDoc.", Toast.LENGTH_LONG).show();
         }
     }
+
     private String[] setFileList() {
         // Call the file list under the directory in mFilePath.
         if (!mFilePath.exists()) {
@@ -965,12 +1003,14 @@ public class DrawCalliActivity extends Activity {
 
         return strFileList;
     }
+
     static class txtFileFilter implements FilenameFilter {
         @Override
         public boolean accept(File dir, String name) {
             return (name.endsWith(".spd") || name.endsWith(".png"));
         }
     }
+
     private boolean saveNoteFile(final boolean isClose) {
         // Prompt Save File dialog to get the file name
         // and get its save format option (note file or image).
@@ -1054,6 +1094,7 @@ public class DrawCalliActivity extends Activity {
             e.printStackTrace();
         }
     }
+
     private void captureSpenSurfaceView(String strFileName) {
 
         // Capture the view
@@ -1090,25 +1131,28 @@ public class DrawCalliActivity extends Activity {
         }
         imgBitmap.recycle();
     }
+
     private static final int PEMISSION_REQUEST_CODE = 1;
+
     public boolean checkPermission() {
         if (SDK_VERSION < 23) {
             return false;
         }
         List<String> permissionList = new ArrayList<String>(Arrays.asList(Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE));
-        if(PackageManager.PERMISSION_GRANTED == checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+        if (PackageManager.PERMISSION_GRANTED == checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             permissionList.remove(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
-        if(PackageManager.PERMISSION_GRANTED == checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)){
+        if (PackageManager.PERMISSION_GRANTED == checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
             permissionList.remove(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
-        if(permissionList.size()>0) {
+        if (permissionList.size() > 0) {
             requestPermissions(permissionList.toArray(new String[permissionList.size()]), PEMISSION_REQUEST_CODE);
             return true;
         }
         return false;
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1160,7 +1204,79 @@ public class DrawCalliActivity extends Activity {
             }
             mSpenNoteDoc = null;
         }
-    };
+    }
+
+    ;
+    private boolean learnSaveNoteFile(final boolean isClose) {
+        // Prompt Save File dialog to get the file name
+        // and get its save format option (note file or image).
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View layout = inflater.inflate(R.layout.save_file_dialog, (ViewGroup) findViewById(R.id.layout_root));
+
+        AlertDialog.Builder builderSave = new AlertDialog.Builder(mContext);
+        builderSave.setTitle("Enter file name");
+        //builderSave.setView(layout);
+
+        final EditText inputPath = (EditText) layout.findViewById(R.id.input_path);
+        inputPath.setText("Note");
+
+//            builderSave.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+
+        final RadioGroup selectFileExt = (RadioGroup) layout.findViewById(R.id.radioGroup);
+
+        // Set the save directory for the file.
+        String saveFilePath = mFilePath.getPath() + "/upload/";
+        String fileName = inputPath.getText().toString();
+        if (!fileName.equals("")) {
+
+            Intent intent = new Intent(DrawCalliActivity.this, UploadCalliActivity.class);
+            File checkFile = new File(saveFilePath);
+            if (!checkFile.mkdirs()) {
+                Toast.makeText(mContext, "Save Path Creation Error", Toast.LENGTH_SHORT).show();
+            }
+
+
+            saveFilePath += HttpClient.user_nickname;
+            saveFilePath += ".spd";
+            saveNoteFile(saveFilePath);
+            intent.putExtra("drawData", saveFilePath);
+            saveFilePath = mFilePath.getPath() + "/upload/";
+            saveFilePath += HttpClient.user_nickname;
+            saveFilePath += ".png";
+            intent.putExtra("image", saveFilePath);
+            captureSpenSurfaceView(saveFilePath);
+
+            startActivityForResult(intent, 0);
+
+//            final int calli_trace = getIntent().getIntExtra("calli_trace",-1);
+//            final int guide_id = getIntent().getIntExtra("guide_id",-1);
+//            final String up_image = getIntent().getStringExtra("image");
+//            final String nickname = HttpClient.user_nickname;
+//            final String drawData = getIntent().getStringExtra("drawData");
+            if (isClose) {
+                finish();
+            }
+        } else {
+            Toast.makeText(mContext, "Invalid filename !!!", Toast.LENGTH_LONG).show();
+        }
+        //}
+        // });
+        builderSave.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (isClose) {
+                    finish();
+                }
+            }
+        });
+
+//        AlertDialog dlgSave = builderSave.create();
+//        dlgSave.show();
+
+        return true;
+    }
 
     @TargetApi(Build.VERSION_CODES.M)
     public boolean hasReadStorePermission() {
@@ -1169,6 +1285,7 @@ public class DrawCalliActivity extends Activity {
         }
         return PackageManager.PERMISSION_GRANTED == checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
     }
+
     @TargetApi(Build.VERSION_CODES.M)
     public void requestReadStorePermission() {
         if (SDK_VERSION < 23) {

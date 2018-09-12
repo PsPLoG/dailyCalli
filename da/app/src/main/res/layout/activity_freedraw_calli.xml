@@ -18,9 +18,10 @@
             android:layout_height="40dp"
             android:layout_margin="1dip"
             android:layout_weight="0"
-            android:background="@drawable/sharp_photo_size_select_small_black_48"
+            android:background="@drawable/selector_tool_bg"
             android:contentDescription="@string/description"
-            android:padding="4dp" />
+            android:padding="6dp"
+            android:src="@drawable/sharp_photo_size_select_small_black_48" />
 
         <ImageView
             android:id="@+id/penBtn"
@@ -30,7 +31,7 @@
             android:layout_weight="0"
             android:background="@drawable/selector_tool_bg"
             android:contentDescription="@string/description"
-            android:padding="4dp"
+            android:padding="6dp"
             android:src="@drawable/baseline_brush_black_48" />
 
         <ImageView
@@ -39,9 +40,10 @@
             android:layout_height="40dp"
             android:layout_margin="1dip"
             android:layout_weight="0"
-            android:background="@drawable/sharp_undo_black_48"
+            android:background="@drawable/selector_tool_bg"
             android:contentDescription="@string/description"
-            android:padding="4dp" />
+            android:padding="6dp"
+            android:src="@drawable/sharp_undo_black_48" />
 
         <ImageView
             android:id="@+id/redo"
@@ -49,9 +51,10 @@
             android:layout_height="40dp"
             android:layout_margin="1dip"
             android:layout_weight="0"
-            android:background="@drawable/sharp_redo_black_48"
+            android:background="@drawable/selector_tool_bg"
             android:contentDescription="@string/description"
-            android:padding="4dp" />
+            android:padding="6dp"
+            android:src="@drawable/sharp_redo_black_48" />
 
         <ImageView
             android:id="@+id/imgObjBtn"
@@ -61,7 +64,7 @@
             android:layout_weight="0"
             android:background="@drawable/selector_tool_bg"
             android:contentDescription="@string/description"
-            android:padding="4dp"
+            android:padding="6dp"
             android:src="@drawable/sharp_add_photo_alternate_black_48" />
 
         <ImageView
@@ -72,7 +75,7 @@
             android:layout_weight="0"
             android:background="@drawable/selector_tool_bg"
             android:contentDescription="@string/description"
-            android:padding="4dp"
+            android:padding="6dp"
             android:src="@drawable/sharp_text_format_black_48" />
 
         <ImageView
@@ -83,6 +86,7 @@
             android:layout_weight="1"
             android:background="@drawable/selector_tool_bg"
             android:contentDescription="@string/description"
+            android:padding="6dp"
             android:src="@drawable/selector_gesture"
             android:visibility="gone" />
 
@@ -94,7 +98,7 @@
             android:layout_weight="0"
             android:background="@drawable/selector_tool_bg"
             android:contentDescription="@string/description"
-            android:padding="4dp"
+            android:padding="6dp"
             android:src="@drawable/sharp_local_florist_black_48" />
 
         <android.support.v7.widget.CardView
